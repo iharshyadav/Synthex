@@ -1,5 +1,4 @@
 import { currentUser } from '@clerk/nextjs/server'
-import { api } from 'convex/_generated/api'
 import { query } from 'convex/_generated/server'
 import { ConvexHttpClient } from 'convex/browser'
 import { FC } from 'react'
@@ -10,6 +9,7 @@ import HeaderProfileBtn from "./HeaderProfileBtn";
 import ThemeSelector from './ThemeSelector'
 import LanguageSelector from './LanguageSelector'
 import RunButton from './RunButton'
+import { api } from '../../../convex/_generated/api';
 
 // interface HeaderProps {
   
