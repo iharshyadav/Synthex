@@ -2,6 +2,7 @@ import { CodeEditorState } from "./../types/index";
 import { create } from "zustand";
 import { Monaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
+import { LANGUAGE_CONFIG } from "app/(root)/_constants";
 
 const getInitialState = () => {
     // if we're on the server, return default values
@@ -67,8 +68,91 @@ const getInitialState = () => {
           },
 
           runCode: async () => {
-            
-          }
-        
+            const {language , getCode} = get();
+            const code = getCode();
+            if (!code) {
+              set({ error: "Please enter some code" });
+              return;
+            }
+      
+            set({ isRunning: true, error: null, output: "" });
+      
+            try {
+              const languageConfig = LANGUAGE_CONFIG[language];
+              if (!languageConfig) {
+                set({ error: "Unsupported language" });
+                return;
+              }
+              const runtime = languageConfig.pistonRuntime;
+              const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  language: runtime.language,
+                  version: runtime.version,
+                  files: [{ content: code }],
+                }),
+              });
+      
+              const data = await response.json();
+      
+              console.log("data back from piston:", data);
+      
+              if (data.message) {
+                set({ error: data.message, executionResult: { code, output: "", error: data.message } });
+                return;
+              }
+      
+              if (data.compile && data.compile.code !== 0) {
+                const error = data.compile.stderr || data.compile.output;
+                set({
+                  error,
+                  executionResult: {
+                    code,
+                    output: "",
+                    error,
+                  },
+                });
+                return;
+              }
+      
+              if (data.run && data.run.code !== 0) {
+                const error = data.run.stderr || data.run.output;
+                set({
+                  error,
+                  executionResult: {
+                    code,
+                    output: "",
+                    error,
+                  },
+                });
+                return;
+              }
+      
+              const output = data.run.output;
+      
+              set({
+                output: output.trim(),
+                error: null,
+                executionResult: {
+                  code,
+                  output: output.trim(),
+                  error: null,
+                },
+              });
+            } catch (error) {
+              console.log("Error running code:", error);
+              set({
+                error: "Error running code",
+                executionResult: { code, output: "", error: "Error running code" },
+              });
+            } finally {
+              set({ isRunning: false });
+            }
+          },
     }
 })  
+
+export const getExecutionResult = () => useEditorStore.getState().executionResult;

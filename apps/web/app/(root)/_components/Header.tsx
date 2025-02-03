@@ -6,10 +6,10 @@ import { FC } from 'react'
 import Link from "next/link";
 import { Blocks, Code2, Sparkles } from "lucide-react";
 import { SignedIn } from "@clerk/nextjs";
-// import RunButton from "./RunButton";
 import HeaderProfileBtn from "./HeaderProfileBtn";
 import ThemeSelector from './ThemeSelector'
 import LanguageSelector from './LanguageSelector'
+import RunButton from './RunButton'
 
 // interface HeaderProps {
   
@@ -103,7 +103,7 @@ const Header = async () => {
         )}
 
         <SignedIn>
-          {/* <RunButton /> */}
+          <RunButton />
         </SignedIn>
 
         <div className="pl-3 border-l border-gray-800">
