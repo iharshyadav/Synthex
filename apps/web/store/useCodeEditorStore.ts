@@ -2,7 +2,8 @@ import { CodeEditorState } from "./../types/index";
 import { create } from "zustand";
 import { Monaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-import { LANGUAGE_CONFIG } from "app/(root)/_constants";
+import axios from "axios";
+import { LANGUAGE_CONFIG } from "app/editor/_constants";
 
 const getInitialState = () => {
     // if we're on the server, return default values
@@ -98,8 +99,6 @@ const getInitialState = () => {
       
               const data = await response.json();
       
-              console.log("data back from piston:", data);
-      
               if (data.message) {
                 set({ error: data.message, executionResult: { code, output: "", error: data.message } });
                 return;
@@ -120,8 +119,16 @@ const getInitialState = () => {
       
               if (data.run && data.run.code !== 0) {
                 const error = data.run.stderr || data.run.output;
+                const filteredError = error.split("\n").map((line: string, index: number) => {
+                  if (line.includes("/piston/jobs/")) {
+                    return `Line ${index + 1}: ${line.split("/piston/jobs/")[1]}`;
+                  }
+                  return line;
+                }).join("\n");
+                // console.log(filteredError);
+                // console.log(error)
                 set({
-                  error,
+                  error:filteredError,
                   executionResult: {
                     code,
                     output: "",
@@ -152,6 +159,52 @@ const getInitialState = () => {
               set({ isRunning: false });
             }
           },
+          // runCode : async () => {
+          //   const {language , getCode} = get();
+          //   const code = getCode();
+          //   console.log(code)
+          //   if (!code) {
+          //   set({ error: "Please enter some code" });
+          //   return;
+          //   }
+          //   const base64 = btoa(code);
+          //   const options = {
+          //     method: 'POST',
+          //     url: 'https://judge0-ce.p.rapidapi.com/submissions',
+          //     params: {
+          //       base64_encoded: 'true',
+          //       wait: 'false',
+          //       fields: '*'
+          //     },
+          //     headers: {
+          //       'x-rapidapi-key': '05422b61e2mshcb8adacf40faf91p12d1bejsnc4bb0a756a58',
+          //       'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
+          //       'Content-Type': 'application/json'
+          //     },
+          //     data: {
+          //       language_id: 102,
+          //       source_code: base64,
+          //       stdin: 'SnVkZ2Uw'
+          //     }
+          //   };
+            
+          //   try {
+          //       const response = await axios.request(options);
+          //       console.log(response.data.token);
+          //       // set({
+          //       //         output: response.trim(),
+          //       //         error: null,
+          //       //         executionResult: {
+          //       //           code,
+          //       //           output: output.trim(),
+          //       //           error: null,
+          //       //         },
+          //       //       });
+          //     //   return response.data;
+          //   } catch (error) {
+          //       console.error(error);
+          //   }
+          // }
     }
 })  
 

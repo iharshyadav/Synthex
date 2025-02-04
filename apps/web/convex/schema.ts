@@ -42,4 +42,12 @@ export default defineSchema({
     .index("by_user_id", ["userId"])
     .index("by_snippet_id", ["snippetId"])
     .index("by_user_id_and_snippet_id", ["userId", "snippetId"]),
+
+  submissions: defineTable({
+    userId: v.string(),
+    snippetId: v.id("snippets"),
+    token: v.string(),
+    status:v.string(),
+    time:v.string(),
+  }).index("by_user_id",["userId"]).index("by_snippet_id", ["snippetId"])
 });

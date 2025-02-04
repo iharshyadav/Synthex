@@ -3,12 +3,13 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useEditorStore } from "store/useCodeEditorStore";
+import { api } from "../../../convex/_generated/api";
 
 function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
   const [title, setTitle] = useState("");
   const [isSharing, setIsSharing] = useState(false);
   const { language, getCode } = useEditorStore();
-//   const createSnippet = useMutation(api.snippets.createSnippet);
+  const createSnippet = useMutation(api.codeSnippets.createSnippet);
 
   const handleShare = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,7 +18,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
 
     try {
       const code = getCode();
-    //   await createSnippet({ title, language, code });
+      await createSnippet({ title, language, code });
       onClose();
       setTitle("");
       toast.success("Snippet shared successfully");
