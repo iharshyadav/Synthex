@@ -6,7 +6,6 @@ function SnippetLoadingSkeleton() {
       <NavigationHeader />
       <main className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="max-w-[1200px] mx-auto">
-          {/* Skeleton Header */}
           <div className="bg-[#121218] border border-[#ffffff0a] rounded-2xl p-6 sm:p-8 mb-6 backdrop-blur-xl">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-4">
@@ -20,10 +19,8 @@ function SnippetLoadingSkeleton() {
                 </div>
               </div>
             </div>
-            {/* Skeleton Code Editor */}
             <div className="h-[400px] bg-[#ffffff08] rounded-xl animate-pulse" />
           </div>
-          {/* Skeleton Comments Section */}
           <div className="bg-[#121218] border border-[#ffffff0a] rounded-2xl p-6 sm:p-8 backdrop-blur-xl">
             <div className="h-6 w-32 bg-[#ffffff08] rounded animate-pulse mb-6" />
             <div className="space-y-4">

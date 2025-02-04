@@ -1,4 +1,4 @@
-import { CodeEditorState } from "./../types/index";
+import { CodeEditorState } from "../app/types/index";
 import { create } from "zustand";
 import { Monaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";

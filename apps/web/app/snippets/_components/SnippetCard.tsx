@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Clock, Trash2, User } from "lucide-react";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { Snippet } from "types";
+import { Snippet } from "app/types";
 import StarButton from "@components/StarButton";
 
 function SnippetCard({ snippet }: { snippet: Snippet }) {
@@ -44,7 +44,6 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
           transition-all duration-300 overflow-hidden"
         >
           <div className="p-6">
-            {/* Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="relative">

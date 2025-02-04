@@ -49,7 +49,6 @@ function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
        duration-200 border border-gray-800/50 hover:border-gray-700
        ${!hasAccess && language !== "javascript" ? "opacity-50 cursor-not-allowed" : ""}`}
       >
-        {/* Decoration */}
         <div
           className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/5 
         rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"

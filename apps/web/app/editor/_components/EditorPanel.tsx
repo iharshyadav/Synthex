@@ -50,7 +50,6 @@ function EditorPanel() {
   return (
     <div className="relative">
       <div className="relative bg-[#12121a]/90 backdrop-blur rounded-xl border border-white/[0.05] p-6">
-        {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#1e1e2e] ring-1 ring-white/5">
@@ -62,7 +61,6 @@ function EditorPanel() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {/* Font Size Slider */}
             <div className="flex items-center gap-3 px-3 py-2 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
               <TypeIcon className="size-4 text-gray-400" />
               <div className="flex items-center gap-3">
@@ -90,7 +88,6 @@ function EditorPanel() {
               <RotateCcwIcon className="size-4 text-gray-400" />
             </motion.button>
 
-            {/* Share Button */}
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -104,7 +101,6 @@ function EditorPanel() {
           </div>
         </div>
 
-        {/* Editor  */}
         <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]">
           {clerk.loaded && (
             <Editor

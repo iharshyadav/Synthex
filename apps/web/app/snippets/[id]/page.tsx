@@ -26,7 +26,6 @@ function SnippetDetailPage() {
 
       <main className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="max-w-[1200px] mx-auto">
-          {/* Header */}
           <div className="bg-[#121218] border border-[#ffffff0a] rounded-2xl p-6 sm:p-8 mb-6 backdrop-blur-xl">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-4">
@@ -63,7 +62,6 @@ function SnippetDetailPage() {
             </div>
           </div>
 
-          {/* Code Editor */}
           <div className="mb-8 rounded-2xl overflow-hidden border border-[#ffffff0a] bg-[#121218]">
             <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#ffffff0a]">
               <div className="flex items-center gap-2 text-[#808086]">
