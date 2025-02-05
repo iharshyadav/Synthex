@@ -1,7 +1,7 @@
 "use client"
 import { SignedOut } from "@clerk/nextjs";
 import HeaderProfileBtn from "app/editor/_components/HeaderProfileBtn";
-import { Blocks, Code2, Sparkles, Menu } from "lucide-react";
+import { Blocks, Code2, Sparkles, Menu, Command } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -25,9 +25,10 @@ function NavigationHeader() {
                 group-hover:opacity-100 blur-xl transition-all duration-700 group-hover:duration-200" />
 
               <div className="flex items-center gap-3 sm:gap-4">
+                {/* Option 3: Command icon */}
                 <div className="relative bg-gradient-to-br from-gray-900 to-black p-2 sm:p-2.5 rounded-xl sm:rounded-2xl 
                   ring-1 ring-white/10 group-hover:ring-blue-500/50 transition-all duration-300 shadow-lg shadow-blue-500/20">
-                  <Blocks className="w-4 h-4 sm:w-6 sm:h-6 text-blue-400 group-hover:text-blue-300 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
+                  <Command className="w-4 h-4 sm:w-6 sm:h-6 text-blue-400 group-hover:text-blue-300 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
                 </div>
 
                 <div className="relative hidden sm:block">
@@ -35,7 +36,6 @@ function NavigationHeader() {
                     bg-clip-text text-transparent filter drop-shadow-lg">
                     Synthex
                   </h1>
-                 
                 </div>
               </div>
             </Link>
@@ -62,21 +62,25 @@ function NavigationHeader() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-4 sm:gap-6">
             <SignedOut>
               <Link
-                href="/pricing"
-                className="group relative hidden sm:flex"
+              href="/pricing"
+              className="group relative hidden sm:flex"
               >
-                <div className="absolute -inset-3 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 
-                  opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                <div className="relative flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gradient-to-r 
-                  from-blue-500/20 to-purple-500/20 border border-white/10 group-hover:border-blue-500/30 transition-all duration-300">
-                  <Sparkles className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                  <span className="text-sm font-medium text-gray-200 group-hover:text-blue-200">
-                    Upgrade
-                  </span>
-                </div>
+              <div className="absolute -inset-3 rounded-lg bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 
+                opacity-0 blur-sm transition-all duration-500" />
+              <div className="relative flex items-center gap-2 px-4 py-1.5 rounded-lg 
+                bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 
+                border border-white/10 group-hover:border-blue-500/50 
+                hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+                <Sparkles className="w-4 h-4 text-blue-400 group-hover:text-blue-300 
+                transform group-hover:rotate-12 transition-all duration-300" />
+                <span className="text-sm font-medium bg-gradient-to-r from-gray-200 to-blue-200 
+                bg-clip-text text-transparent group-hover:from-blue-200 group-hover:to-purple-200">
+                Upgrade
+                </span>
+              </div>
               </Link>
             </SignedOut>
 
@@ -85,11 +89,12 @@ function NavigationHeader() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10"
+              className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 
+              hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
             >
-              <Menu className="w-5 h-5 text-gray-300" />
+              <Menu className="w-5 h-5 text-gray-300 hover:text-blue-300 transition-colors" />
             </button>
-          </div>
+            </div>
         </div>
 
         {/* Mobile Menu */}
