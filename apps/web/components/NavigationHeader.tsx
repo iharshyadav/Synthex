@@ -10,7 +10,6 @@ function NavigationHeader() {
 
   return (
     <div className="fixed top-0 z-50 w-full">
-      {/* Glass morphism effect background */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-xl backdrop-saturate-150" />
       
       {/* Animated gradient border */}
@@ -42,21 +41,21 @@ function NavigationHeader() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center ml-8">
-              {["Snippets", "Editor"].map((item) => (
-                <Link
-                  key={item}
-                  href={`/${item.toLowerCase()}`}
-                  className="relative group mx-2"
-                >
-                  <div className="absolute -inset-3 rounded-lg 
-                    opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                  <div className="relative flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 group-hover:bg-blue-500/10 transition-all duration-300">
-                    <Code2 className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transform group-hover:rotate-12 transition-transform" />
-                    <span className="text-sm font-medium text-gray-300 group-hover:text-blue-200">
-                      {item}
-                    </span>
-                  </div>
-                </Link>
+              {["Snippets", "Editor" , "Code Live"].map((item) => (
+              <Link
+                key={item}
+                href={item === "Code Live" ? "/joinroom" : `/${item.toLowerCase()}`}
+                className="relative group mx-2"
+              >
+                <div className="absolute -inset-3 rounded-lg 
+                opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                <div className="relative flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 group-hover:bg-blue-500/10 transition-all duration-300">
+                <Code2 className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transform group-hover:rotate-12 transition-transform" />
+                <span className="text-sm font-medium text-gray-300 group-hover:text-blue-200">
+                  {item}
+                </span>
+                </div>
+              </Link>
               ))}
             </nav>
           </div>

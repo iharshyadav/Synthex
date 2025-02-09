@@ -5,6 +5,8 @@ import { TracingBeam } from "@components/ui/tracing-beam";
 import { BackgroundBeams } from "@components/ui/background-beams";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import Loader from "@components/loader";
 
 export default function HomePage() {
   return (
