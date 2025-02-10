@@ -1,28 +1,22 @@
 "use client";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { FC, useEffect, useRef, useState } from "react";
-import { Socket } from "socket.io-client";
-import { initSocket } from "../components/socket";
+import { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import { ACTIONS } from "@components/action";
 import toast from "react-hot-toast";
 import Client from "../components/client";
-import dynamic from "next/dynamic";
+import Editor from "../components/editor";
 import Link from "next/link";
 import { Command } from "lucide-react";
-
-const Editor = dynamic(() => import("../components/editor"), {
-  ssr: false,
-});
-
-interface pageProps {}
 
 interface Client {
   socketId: string;
   username: string;
 }
 
-const page: FC<pageProps> = ({}) => {
-  const socketRef = useRef<Socket>(null);
+const socket = io("http://localhost:3002");
+
+const page = ({}) => {
   const codeRef = useRef<string | null>(null);
   const { roomId } = useParams();
   const [clients, setClients] = useState<Client[]>([]);
@@ -32,37 +26,32 @@ const page: FC<pageProps> = ({}) => {
 
   useEffect(() => {
     const init = async () => {
-      socketRef.current = await initSocket();
-      socketRef.current.on("connect_error", (err) => handleErrors(err));
-      socketRef.current.on("connect_failed", (err) => handleErrors(err));
+      socket.on("connect_error", (err) => handleErrors(err));
+      socket.on("connect_failed", (err) => handleErrors(err));
 
       function handleErrors(e: any) {
         console.log("socket error", e);
         toast.error("Socket connection failed, try again later.");
       }
 
-      socketRef.current.emit(ACTIONS.JOIN, {
+      socket.emit(ACTIONS.JOIN, {
         roomId,
         username: username,
       });
 
-      socketRef.current.on(
+      socket.on(
         ACTIONS.JOINED,
         ({ clients, username: joinedUsername, socketId }) => {
           if (joinedUsername !== username) {
-            console.log("user joined the room")
+            console.log("user joined the room");
             toast.success(`${joinedUsername} joined the room.`);
             console.log(`${joinedUsername} joined`);
           }
           setClients(clients);
-          socketRef.current?.emit(ACTIONS.SYNC_CODE, {
-            code: codeRef.current,
-            socketId,
-          });
         }
       );
 
-      socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+      socket.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
         toast.success(`${username} left the room.`);
         setClients((prev) => {
           return prev.filter((client) => client.socketId !== socketId);
@@ -71,9 +60,9 @@ const page: FC<pageProps> = ({}) => {
     };
     init();
     return () => {
-      socketRef.current?.disconnect();
-      socketRef.current?.off(ACTIONS.JOINED);
-      socketRef.current?.off(ACTIONS.DISCONNECTED);
+      socket.off(ACTIONS.JOINED);
+      socket.off(ACTIONS.DISCONNECTED);
+      socket.disconnect();
     };
   }, []);
 
@@ -159,7 +148,7 @@ const page: FC<pageProps> = ({}) => {
       <div className="flex-1 bg-[#0F0F0F]">
         <div className="h-full w-full">
           <Editor
-            socketRef={socketRef}
+            socket={socket}
             roomId={roomId}
             onCodeChange={(code) => {
               codeRef.current = code;

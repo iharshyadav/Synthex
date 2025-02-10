@@ -24,8 +24,9 @@ const Home = () => {
       toast.error("ROOM ID & username is required");
       return;
     }
-    router.push(`/edit/${roomId}?username=${encodeURIComponent(username)}`);
+    window.location.href = `/edit/${roomId}?username=${encodeURIComponent(username)}`;
   };
+  
 
   const handleInputEnter = (e: any) => {
     if (e.key === "Enter") {

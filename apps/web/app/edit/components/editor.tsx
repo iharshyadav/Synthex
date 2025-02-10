@@ -1,64 +1,54 @@
 import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { ACTIONS } from "@components/action";
+import { Socket } from "socket.io-client";
+import { runLiveCode } from "lib/action";
 
 interface EditorProps {
-  socketRef: React.RefObject<any>;
-  roomId: string | undefined | string[];
+  socket: Socket;
+  roomId: string | string[] | undefined;
   onCodeChange: (code: string) => void;
 }
 
-const Editor: React.FC<EditorProps> = ({ socketRef, roomId, onCodeChange }) => {
+const Editor: React.FC<EditorProps> = ({ socket, roomId, onCodeChange }) => {
+  const [code, setCode] = useState("// Start typing...");
   const editorRef = useRef<any>(null);
-  const [isRemoteChange, setIsRemoteChange] = useState(false);
+  const isUpdatingRef = useRef(false); 
+
+  useEffect(() => {
+    socket.on("updateCode", (newCode: string) => {
+        console.log(newCode)
+      if (editorRef.current && newCode !== editorRef.current.getValue()) {
+        const editor = editorRef.current;
+        const position = editor.getPosition();
+
+        isUpdatingRef.current = true;
+        editor.setValue(newCode);
+        editor.setPosition(position);
+
+        setTimeout(() => (isUpdatingRef.current = false), 100);
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
-
-    editor.onDidChangeModelContent((event: any) => {
-      if (!isRemoteChange) {
-        const code = editor.getValue();
-        const position = editor.getPosition();
-        onCodeChange(code);
-        socketRef.current?.emit(ACTIONS.CODE_CHANGE, {
-          roomId,
-          code,
-          position,
-        });
-      }
-    });
   };
 
-  useEffect(() => {
-    if (socketRef.current) {
-      socketRef.current.on(
-        ACTIONS.CODE_CHANGE,
-        ({ code, position }: { code: string; position: any }) => {
-          if (code !== null && editorRef.current) {
-            setIsRemoteChange(true);
-            editorRef.current.setValue(code);
-            if (position) {
-              editorRef.current.setPosition(position);
-            }
-            setIsRemoteChange(false);
-          }
-        }
-      );
+  const handleEditorChange = (value: string | undefined) => {
+    if (isUpdatingRef.current) return;
 
-      socketRef.current.on(ACTIONS.SYNC_CODE, ({ code }: { code: string }) => {
-        if (code !== null && editorRef.current) {
-          setIsRemoteChange(true);
-          editorRef.current.setValue(code);
-          setIsRemoteChange(false);
-        }
-      });
-    }
-
-    return () => {
-      socketRef.current?.off(ACTIONS.CODE_CHANGE);
-      socketRef.current?.off(ACTIONS.SYNC_CODE);
-    };
-  }, [socketRef.current]);
+    const newValue = value || "";
+    setCode(newValue);
+    socket.emit(ACTIONS.CODE_CHANGE, {
+      roomId,
+      code: newValue
+    });
+  };
 
   return (
     <div className="editor-container p-4 bg-[#1e1e1e] h-full">
@@ -68,13 +58,15 @@ const Editor: React.FC<EditorProps> = ({ socketRef, roomId, onCodeChange }) => {
           <div className="w-3 h-3 rounded-full bg-yellow-500" />
           <div className="w-3 h-3 rounded-full bg-green-500" />
         </div>
-        <div className="text-gray-400 text-sm">JavaScript Editor</div>
+        <button onClick={() => runLiveCode("javascript",code)} className="text-gray-400 text-sm">Run</button>
       </div>
       <MonacoEditor
         height="90vh"
         defaultLanguage="javascript"
         theme="vs-dark"
         onMount={handleEditorDidMount}
+        onChange={handleEditorChange}
+        defaultValue={code}
         options={{
           fontSize: 16,
           minimap: { enabled: true, scale: 10 },

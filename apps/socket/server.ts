@@ -50,23 +50,22 @@ io.on('connection', (socket: Socket) => {
     });
   });
 
-  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code, position }: { roomId: string; code: string; position: any }) => {
-    console.log("Broadcasting code change:", code);
-    socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code, position });
-  });
-
-  socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }: { socketId: string; code: string }) => {
-    io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
+  socket.on("codeChange", ({ roomId, code }: { roomId: string; code: string }) => {
+    if (!roomId || !code) return;
+    console.log(code)
+    socket.to(roomId).emit("updateCode", code);
   });
 
   socket.on('disconnecting', () => {
     const rooms = [...socket.rooms];
     rooms.forEach((roomId) => {
-      socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
-        socketId: socket.id,
-        username: userSocketMap[socket.id],
-      });
-      socket.leave(roomId);
+      if (roomId !== socket.id) {
+        socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
+          socketId: socket.id,
+          username: userSocketMap[socket.id],
+        });
+        socket.leave(roomId);
+      }
     });
     delete userSocketMap[socket.id];
   });
