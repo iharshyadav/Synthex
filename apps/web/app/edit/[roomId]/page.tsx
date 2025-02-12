@@ -14,7 +14,7 @@ interface Client {
   username: string;
 }
 
-const socket = io("http://localhost:3002");
+const socket = io("http://13.233.226.120:3002");
 
 const page = ({}) => {
   const codeRef = useRef<string | null>(null);
