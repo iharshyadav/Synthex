@@ -41,10 +41,10 @@ function NavigationHeader() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center ml-8">
-              {["Snippets", "Editor" , "Code Live"].map((item) => (
+              {["Snippets", "Editor" , "Code Live", "Code Review"].map((item) => (
               <Link
                 key={item}
-                href={item === "Code Live" ? "/joinroom" : `/${item.toLowerCase()}`}
+                href={item === "Code Live" ? "/joinroom" : item === "Code Review" ? "/codereview" : `/${item.toLowerCase()}`}
                 className="relative group mx-2"
               >
                 <div className="absolute -inset-3 rounded-lg 

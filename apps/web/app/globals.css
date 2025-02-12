@@ -103,3 +103,19 @@
   height: 1em;
   position: absolute;
 }
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #444444; /* Dark gray for the scrollbar thumb */
+  border-radius: 10px;
+  border: 3px solid #1A1A1A; /* Dark border around the thumb */
+}
+
+::-webkit-scrollbar-track {
+  background: #2D2D2D; /* Dark track */
+  border-radius: 10px;
+}

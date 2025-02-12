@@ -56,7 +56,16 @@ const config: Pick<Config, "content" | "presets"> = {
     				'4': 'hsl(var(--chart-4))',
     				'5': 'hsl(var(--chart-5))'
     			}
-    		}
+    		},
+			animation: {
+				fadeIn: "fadeIn 1s ease-in forwards",
+			  },
+			  keyframes: {
+				fadeIn: {
+				  "0%": { opacity: 0 },
+				  "100%": { opacity: 1 },
+				},
+			  }
     	}
     }
 };
