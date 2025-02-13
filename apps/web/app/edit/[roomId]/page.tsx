@@ -14,7 +14,7 @@ interface Client {
   username: string;
 }
 
-const socket = io("https://13-233-226-120.nip.io");
+const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL!);
 
 const page = ({}) => {
   const codeRef = useRef<string | null>(null);
