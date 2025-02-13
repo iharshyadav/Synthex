@@ -60,7 +60,7 @@ function ProfilePage() {
   if (!user && isLoaded) return router.push("/");
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen mt-12 bg-[#0a0a0f]">
       <NavigationHeader />
 
       <div className="max-w-7xl mx-auto px-4 py-12">
