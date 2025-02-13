@@ -14,7 +14,7 @@ interface Client {
   username: string;
 }
 
-const socket = io("http://13.233.226.120:3002");
+const socket = io("https://13-233-226-120.nip.io");
 
 const page = ({}) => {
   const codeRef = useRef<string | null>(null);
