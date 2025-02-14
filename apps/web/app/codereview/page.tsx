@@ -5,11 +5,19 @@ import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import { generateReview } from "../../lib/action";
 import NavigationHeader from "@components/NavigationHeader";
+import { useEditorStore } from "store/useCodeEditorStore";
+import { defineMonacoThemes, LANGUAGE_CONFIG } from "app/editor/_constants";
+import ThemeSelector from "app/editor/_components/ThemeSelector";
+import Link from "next/link";
+import LanguageSelector from "app/editor/_components/LanguageSelector";
+import { Sparkles } from "lucide-react";
 
 export default function CodeReview() {
   const [code, setCode] = useState(`function sum() {
     return 1 + 1
 }`);
+  const { language, theme, fontSize, editor, setFontSize, setEditor } =
+    useEditorStore();
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -36,41 +44,64 @@ export default function CodeReview() {
                 <span className="text-sm text-gray-400">code.js</span>
 
                 <div className="flex justify-center items-center h-full">
-                  <button
-                    onClick={reviewCode}
-                    className="group flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <ThemeSelector />
+                      <LanguageSelector hasAccess={Boolean(true)} />
+                    </div>
+
+                    <button
+                      onClick={reviewCode}
+                      className="group flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 
         hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-300 
         font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-600/40 
         hover:scale-[1.02] active:scale-[0.98]"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <div className="animate-spin rounded-full border-t-4 border-white w-5 h-5"></div>
-                        <span className="ml-2 text-sm">Reviewing...</span>
-                      </>
-                    ) : (
-                      <span className="tracking-wide text-sm">Review Code</span>
-                    )}
-                  </button>
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full border-t-4 border-white w-5 h-5"></div>
+                          <span className="ml-2 text-sm">Reviewing...</span>
+                        </>
+                      ) : (
+                        <span className="tracking-wide text-sm">
+                          Review Code
+                        </span>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 
               <div className="flex-grow">
                 <Editor
                   height="100%"
-                  defaultLanguage="javascript"
+                  language={LANGUAGE_CONFIG[language]?.monacoLanguage}
                   value={code}
+                  beforeMount={defineMonacoThemes}
                   onChange={(value) => setCode(value || "")}
-                  theme="vs-dark"
+                  theme={theme}
                   options={{
                     minimap: { enabled: false },
-                    fontSize: 14,
-                    padding: { top: 20 },
-                    scrollBeyondLastLine: false,
-                    wordWrap: "on",
+                    fontSize,
                     automaticLayout: true,
-                    fontFamily: "JetBrains Mono, monospace",
+                    scrollBeyondLastLine: false,
+                    padding: { top: 16, bottom: 16 },
+                    renderWhitespace: "selection",
+                    fontFamily:
+                      '"Fira Code", "Cascadia Code", Consolas, monospace',
+                    fontLigatures: true,
+                    cursorBlinking: "smooth",
+                    smoothScrolling: true,
+                    contextmenu: true,
+                    renderLineHighlight: "all",
+                    lineHeight: 1.6,
+                    letterSpacing: 0.5,
+                    roundedSelection: true,
+                    scrollbar: {
+                      verticalScrollbarSize: 8,
+                      horizontalScrollbarSize: 8,
+                    },
                   }}
                 />
               </div>

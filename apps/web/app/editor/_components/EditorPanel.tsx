@@ -10,11 +10,13 @@ import { useEditorStore } from "store/useCodeEditorStore";
 import useMounted from "hooks/useMounted";
 import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
 import ShareSnippetDialog from "./ShareSnippetDialog";
+import { codeCorrectionResponseStream } from "@components/codeCorrection/correction";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 function EditorPanel() {
   const clerk = useClerk();
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-  const { language, theme, fontSize, editor, setFontSize, setEditor } = useEditorStore();
+  const { language, theme, fontSize, editor, setFontSize, setEditor, getCode , error } = useEditorStore();
 
   const mounted = useMounted();
 
@@ -45,6 +47,28 @@ function EditorPanel() {
     localStorage.setItem("editor-font-size", size.toString());
   };
 
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const code = getCode();
+      const res = await codeCorrectionResponseStream(code , error);
+      let result = '';
+      let currentPosition = 0;
+      
+      if (editor) {
+        editor.setValue('');
+        for await (const chunk of res) {
+          result += chunk;
+          editor.setValue(result);
+          editor.setPosition({ lineNumber: editor.getModel()?.getLineCount() || 1, column: 1 });
+        }
+      }
+      return result;
+    },
+    onSuccess: (data) => {
+      console.log(data)
+    },
+  })
+
   if (!mounted) return null;
 
   return (
@@ -61,6 +85,18 @@ function EditorPanel() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+          <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                mutation.mutate()
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-gradient-to-r
+               from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity"
+            >
+              <ShareIcon className="size-4 text-white" />
+              <span className="text-sm font-medium text-white ">Ask AI</span>
+            </motion.button>
             <div className="flex items-center gap-3 px-3 py-2 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
               <TypeIcon className="size-4 text-gray-400" />
               <div className="flex items-center gap-3">

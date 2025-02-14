@@ -8,9 +8,9 @@ export default defineSchema({
     name: v.string(),
     isPro: v.boolean(),
     proSince: v.optional(v.number()),
-    lemonSqueezyCustomerId: v.optional(v.string()),
-    lemonSqueezyOrderId: v.optional(v.string()),
-  }).index("by_user_id", ["userId"]),
+    paymentId: v.optional(v.id("payments")),
+  }).index("by_user_id", ["userId"])
+    .index("by_payment_id", ["paymentId"]),
 
   codeExecutions: defineTable({
     userId: v.string(),
@@ -49,5 +49,16 @@ export default defineSchema({
     token: v.string(),
     status:v.string(),
     time:v.string(),
-  }).index("by_user_id",["userId"]).index("by_snippet_id", ["snippetId"])
+  }).index("by_user_id",["userId"]).index("by_snippet_id", ["snippetId"]),
+
+  payments: defineTable({
+    userId: v.id("users"),
+    orderId: v.string(),
+    paymentId: v.string(),
+    status: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user_id", ["userId"])
+    .index("by_order_id", ["orderId"])
+    .index("by_payment_id", ["paymentId"]),
 });

@@ -85,9 +85,9 @@ async function PricingPage() {
                                 </div>
                                 <h2 className="text-3xl md:text-4xl font-bold text-white">Lifetime Pro Access</h2>
                                 <div className="flex items-baseline justify-center gap-2">
-                                    <span className="text-2xl md:text-3xl text-gray-400">$</span>
+                                    <span className="text-2xl md:text-3xl text-gray-400">₹</span>
                                     <span className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
-                                        39
+                                        999
                                     </span>
                                     <span className="text-xl md:text-2xl text-gray-400">one-time</span>
                                 </div>

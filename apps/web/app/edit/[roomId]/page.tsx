@@ -8,6 +8,7 @@ import Client from "../components/client";
 import Editor from "../components/editor";
 import Link from "next/link";
 import { Command } from "lucide-react";
+import Terminal from "../components/terminal";
 
 interface Client {
   socketId: string;
