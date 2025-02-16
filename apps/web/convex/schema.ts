@@ -8,7 +8,7 @@ export default defineSchema({
     name: v.string(),
     isPro: v.boolean(),
     proSince: v.optional(v.number()),
-    paymentId: v.optional(v.id("payments")),
+    paymentId: v.optional(v.string()),
   }).index("by_user_id", ["userId"])
     .index("by_payment_id", ["paymentId"]),
 
@@ -52,7 +52,7 @@ export default defineSchema({
   }).index("by_user_id",["userId"]).index("by_snippet_id", ["snippetId"]),
 
   payments: defineTable({
-    userId: v.id("users"),
+    userId: v.string(),
     orderId: v.string(),
     paymentId: v.string(),
     status: v.string(),
