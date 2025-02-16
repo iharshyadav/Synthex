@@ -1,7 +1,7 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@components/components/ui/button";
-import { api } from "convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { Zap } from "lucide-react";
 import { useState } from "react";
