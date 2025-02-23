@@ -11,7 +11,15 @@ interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({ socket, roomId, onCodeChange }) => {
-  const [code, setCode] = useState("// Start typing...");
+  const defaultValue = "// Start typing...";
+  const [code, setCode] = useState(defaultValue);
+
+  useEffect(() => {
+    // Ensure the default value is always present at the start
+    if (code === defaultValue || !code.includes(defaultValue)) {
+      setCode(defaultValue);
+    }
+  }, [code]);
   const editorRef = useRef<any>(null);
   const isUpdatingRef = useRef(false); 
 
@@ -69,7 +77,7 @@ const Editor: React.FC<EditorProps> = ({ socket, roomId, onCodeChange }) => {
         defaultValue={code}
         options={{
           fontSize: 16,
-          minimap: { enabled: true, scale: 10 },
+          minimap: { enabled: true, scale: 1 },
           automaticLayout: true,
           lineNumbers: "on",
           roundedSelection: true,
@@ -97,7 +105,7 @@ const Editor: React.FC<EditorProps> = ({ socket, roomId, onCodeChange }) => {
             enabled: true,
           },
         }}
-        className="rounded-lg shadow-xl border-2 border-gray-700"
+        className="rounded-lg shadow-xl border-0 border-gray-700"
       />
     </div>
   );

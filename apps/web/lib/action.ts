@@ -28,6 +28,8 @@ export const runLiveCode = async (language: string, code: string) => {
 
     const data = await response.json();
 
+    // console.log(data)
+
     if (data.message) {
       return {
         error: data.message,

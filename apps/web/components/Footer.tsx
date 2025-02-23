@@ -1,8 +1,13 @@
+"use client"
 import { Blocks, Twitter, Github, Linkedin, Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
+import { useState } from "react";
 
 function Footer() {
+  const [email, setEmail] = useState("");
+
   return (
     <footer className="relative border-t border-gray-800/50 mt-auto bg-black">
       <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-gray-900 to-transparent" />
@@ -26,22 +31,24 @@ function Footer() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1 relative group">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full bg-black/30 border border-gray-700 rounded-xl px-5 py-3 text-white 
-               placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 
-               focus:border-blue-500/50 transition-all duration-200"
+            <div className="flex-1 relative group">
+          <PlaceholdersAndVanishInput 
+            placeholders={["Enter your email"]}
+            onChange={(e) => {
+                setEmail(e.target.value);
+              console.log(e.target.value);
+            }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log("Form submitted");
+            }}
           />
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 
-                  group-hover:opacity-100 transition-opacity -z-10 blur-sm" />
               </div>
-              <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 
+              {/* <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 
                    text-white px-8 py-3 rounded-xl font-medium transition-all duration-200 
                    hover:shadow-lg hover:shadow-blue-500/25">
           Subscribe
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
