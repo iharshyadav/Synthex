@@ -47,7 +47,7 @@ function NavigationHeader() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center ml-8">
-              {["Snippets", "Editor", "Code Live", "Code Review","Dashboard"].map(
+              {["Snippets", "Editor", "Code Live", "Code Review","Dashboard" , "Contest"].map(
                 (item) => (
                   <Link
                     key={item}
@@ -121,7 +121,7 @@ function NavigationHeader() {
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10">
             <nav className="px-4 py-4 space-y-2">
-              {["Snippets", "Editor", "Code Live", "Code Review","Dashboard"].map(
+              {["Snippets", "Editor", "Code Live", "Code Review","Dashboard" ,"Contest"].map(
                 (item) => (
                   <Link
                     key={item}

@@ -1,6 +1,6 @@
 "use client";
 import { Inter } from "next/font/google";
-import { Providers } from "./providers";
+import { Providers } from "./themeProviders";
 import { Toaster } from "react-hot-toast";
 import useMounted from "hooks/useMounted";
 

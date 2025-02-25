@@ -243,7 +243,7 @@ export default function Chatbot() {
             animate={{ scale: 1, rotate: 0 }}
             exit={{ scale: 0, rotate: 180 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-8 right-8 flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full shadow-lg hover:shadow-indigo-500/50 transition-all duration-300 border-2 border-indigo-400/50 backdrop-blur-sm group"
+            className="fixed bottom-8 right-8 flex items-center gap-3 lg:px-6 px-3 py-3 lg:py-4 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full shadow-lg hover:shadow-indigo-500/50 transition-all duration-300 border-2 border-indigo-400/50 backdrop-blur-sm group"
             whileHover={{
               scale: 1.05,
               boxShadow: "0 0 25px rgba(99, 102, 241, 0.6)",
@@ -260,7 +260,7 @@ export default function Chatbot() {
             >
               <MessageCircle className="w-6 h-6 text-white group-hover:text-indigo-200" />
             </motion.div>
-            <span className="text-white font-medium text-sm">Chat with AI</span>
+            <span className="text-white lg:block hidden font-medium text-sm">Chat with AI</span>
           </motion.button>
         )}
       </AnimatePresence>
