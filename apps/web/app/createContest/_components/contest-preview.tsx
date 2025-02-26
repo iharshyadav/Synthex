@@ -23,7 +23,7 @@ export function ContestPreview({ formData }: ContestPreviewProps) {
       <CardContent className="space-y-6">
         <div>
           <h3 className="font-semibold">{formData.title || 'Contest Title'}</h3>
-          <p className="text-sm text-muted-foreground mt-2 break-words">
+          <p className="text-sm text-muted-foreground mt-2 break-words overflow-y-scroll h-32">
             {formData.description || 'Contest description will appear here'}
           </p>
         </div>

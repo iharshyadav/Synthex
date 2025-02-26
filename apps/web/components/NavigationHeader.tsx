@@ -1,5 +1,5 @@
 "use client";
-import { SignedOut } from "@clerk/nextjs";
+import { SignedOut, useUser } from "@clerk/nextjs";
 import HeaderProfileBtn from "app/editor/_components/HeaderProfileBtn";
 import { Blocks, Code2, Sparkles, Menu, Command } from "lucide-react";
 import Link from "next/link";
@@ -7,6 +7,8 @@ import { useState } from "react";
 
 function NavigationHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const {user} = useUser();
 
   return (
     <div className="fixed top-0 z-50 w-full">
@@ -46,6 +48,8 @@ function NavigationHeader() {
             </Link>
 
             {/* Desktop Navigation */}
+            {
+              user?.id && (
             <nav className="hidden md:flex items-center ml-8">
               {["Snippets", "Editor", "Code Live", "Code Review","Dashboard" , "Contest"].map(
                 (item) => (
@@ -55,7 +59,7 @@ function NavigationHeader() {
                       item === "Code Live"
                         ? "/joinroom"
                         : item === "Code Review"
-                          ? "/codereview"
+                          ? "/codereview" : item === "Contest" ? "/createContest"
                           : `/${item.toLowerCase()}`
                     }
                     className="relative group mx-2"
@@ -74,6 +78,8 @@ function NavigationHeader() {
                 )
               )}
             </nav>
+              )
+            }
           </div>
 
           {/* Action Buttons */}
@@ -118,7 +124,7 @@ function NavigationHeader() {
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
+        {isMobileMenuOpen && user?.id && (
           <div className="md:hidden absolute top-full left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10">
             <nav className="px-4 py-4 space-y-2">
               {["Snippets", "Editor", "Code Live", "Code Review","Dashboard" ,"Contest"].map(

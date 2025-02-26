@@ -41,8 +41,9 @@ interface IContest extends Document {
     problems: IProblem[];
     participants: IParticipant[];
     leaderboard: ILeaderboard[];
-    createdBy: mongoose.Types.ObjectId;
+    createdBy: string;
     isActive: boolean;
+    prizes: { position: number; reward: string; }[];
 }
 
 const testCaseSchema = new mongoose.Schema<ITestCase>({
@@ -86,9 +87,13 @@ const contestSchema = new mongoose.Schema<IContest>({
     problems: [problemSchema],
     participants: [participantSchema],
     leaderboard: [leaderboardSchema],
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    createdBy: { type: String, required: true },
     isActive: { type: Boolean, default: true },
+    prizes: [{
+        position: { type: Number, required: true },
+        reward: { type: String, required: true }
+    }]
 });
 
-const Contest: Model<IContest> = mongoose.models.Contest || mongoose.model<IContest>("Contest", contestSchema);
+const Contest: Model<IContest> = mongoose.models?.Contests || mongoose.model<IContest>("Contests", contestSchema);
 export default Contest;

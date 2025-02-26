@@ -23,6 +23,9 @@ import { format } from 'date-fns';
 import { CalendarIcon, Plus, Minus, Upload, Check, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn } from '@components/lib/utils';
+import { FileUpload } from '@components/ui/file-upload';
+import { useMutation } from '@tanstack/react-query';
+import { createContest } from '../lib/createContestServerAction';
 
 interface ContestFormProps {
   formData: any;
@@ -73,11 +76,22 @@ export function ContestForm({ formData, setFormData }: ContestFormProps) {
   const handleNext = () => {
     if (validateForm()) {
       setCurrentStep(Math.min(totalSteps, currentStep + 1));
+      if(currentStep == totalSteps){
+        mutation.mutate(formData);
+      }
       toast.success(
         'Progress saved'
       );
     }
   };
+
+  const mutation = useMutation({
+    mutationFn: createContest,
+    onSuccess: (data:any) => {
+      console.log(data)
+      // Invalidate and refetch
+    },
+  })
 
   return (
     <div className="space-y-8">
@@ -140,6 +154,7 @@ export function ContestForm({ formData, setFormData }: ContestFormProps) {
             </Label>
             <Input
               id="title"
+              name='title'
               placeholder="Enter contest title"
               value={formData.title}
               onChange={(e) => updateFormData('title', e.target.value)}
@@ -344,7 +359,7 @@ export function ContestForm({ formData, setFormData }: ContestFormProps) {
         "p-6 card-shadow transition-opacity duration-300",
         currentStep === 4 ? "opacity-100" : "opacity-0 hidden"
       )}>
-        <div className="border-2 border-dashed rounded-lg p-8 text-center">
+        {/* <div className="border-2 border-dashed rounded-lg p-8 text-center">
           <Upload className="h-8 w-8 mx-auto mb-4 text-muted-foreground" />
           <h4 className="text-lg font-medium mb-2">Upload Contest Materials</h4>
           <p className="text-sm text-muted-foreground mb-4">
@@ -353,7 +368,8 @@ export function ContestForm({ formData, setFormData }: ContestFormProps) {
           <Button variant="outline" className="hover-scale">
             Choose Files
           </Button>
-        </div>
+        </div> */}
+        <FileUpload />
       </Card>
 
       <div className="flex justify-between gap-4">
