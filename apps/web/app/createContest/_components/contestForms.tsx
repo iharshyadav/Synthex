@@ -86,11 +86,27 @@ export function ContestForm({ formData, setFormData }: ContestFormProps) {
   };
 
   const mutation = useMutation({
-    mutationFn: createContest,
-    onSuccess: (data:any) => {
-      console.log(data)
-      // Invalidate and refetch
+    mutationFn: async (formData: any) => {
+      const response = await fetch('/api/createContest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
     },
+    onSuccess: (data:any) => {
+      toast.success('Contest created successfully!');
+      console.log(data);
+    },
+    onError: (error: any) => {
+      toast.error('Failed to create contest');
+      console.error(error);
+    }
   })
 
   return (

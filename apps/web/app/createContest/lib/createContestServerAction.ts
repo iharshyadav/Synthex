@@ -2,8 +2,6 @@
 import { auth } from '@clerk/nextjs/server';
 import { ConnectToDB } from 'lib/contests/connectDB/connectDB';
 import Contest from 'lib/contests/models/contestSchema';
-import mongoose from 'mongoose';
-import { revalidatePath } from 'next/cache';
 
 
 export async function createContest(formData: any) {
