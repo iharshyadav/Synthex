@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
         const createdBy = user.userId;
 
         if (!title || !description || !startTimeStr || !endTimeStr || !createdBy || !prizesStr) {
+            console.log(title,description,startTimeStr,endTimeStr,createdBy,prizesStr)
             return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
         }
 

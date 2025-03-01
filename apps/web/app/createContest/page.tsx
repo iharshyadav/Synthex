@@ -24,7 +24,6 @@ export default function CreateContest() {
     prizes: [{ position: 1, reward: '' }],
   });
 
-  // Auto-save functionality
   useEffect(() => {
     const timer = setTimeout(() => {
       localStorage.setItem('contestDraft', JSON.stringify(formData));
@@ -33,7 +32,6 @@ export default function CreateContest() {
     return () => clearTimeout(timer);
   }, [formData]);
 
-  // Load draft on mount
   useEffect(() => {
     const savedDraft = localStorage.getItem('contestDraft');
     if (savedDraft) {

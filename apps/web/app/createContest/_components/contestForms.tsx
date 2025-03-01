@@ -101,7 +101,8 @@ export function ContestForm({ formData, setFormData }: ContestFormProps) {
     },
     onSuccess: (data:any) => {
       toast.success('Contest created successfully!');
-      console.log(data);
+       localStorage.removeItem('contestDraft')
+      // console.log(data);
     },
     onError: (error: any) => {
       toast.error('Failed to create contest');

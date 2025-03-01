@@ -19,14 +19,14 @@ interface IProblem {
 }
 
 interface IParticipant {
-    userId: mongoose.Types.ObjectId;
+    userId: string;
     username: string;
     score: number;
     submissionCount: number;
 }
 
 interface ILeaderboard {
-    userId: mongoose.Types.ObjectId;
+    userId: string;
     username: string;
     score: number;
     rank?: number;
@@ -65,14 +65,14 @@ const problemSchema = new mongoose.Schema<IProblem>({
 });
 
 const participantSchema = new mongoose.Schema<IParticipant>({
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+    userId: { type: String, required: true},
     username: { type: String, required: true },
     score: { type: Number, default: 0 },
     submissionCount: { type: Number, default: 0 },
 });
 
 const leaderboardSchema = new mongoose.Schema<ILeaderboard>({
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+    userId: { type: String, required: true},
     username: { type: String, required: true },
     score: { type: Number, required: true },
     rank: { type: Number },

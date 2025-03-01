@@ -59,7 +59,7 @@ function NavigationHeader() {
                       item === "Code Live"
                         ? "/joinroom"
                         : item === "Code Review"
-                          ? "/codereview" : item === "Contest" ? "/createContest"
+                          ? "/codereview"
                           : `/${item.toLowerCase()}`
                     }
                     className="relative group mx-2"
