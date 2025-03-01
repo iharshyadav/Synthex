@@ -17,7 +17,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         
         await ConnectToDB();
 
-        const contests = await Contest.find({ createdBy: userId })
+        const contests = await Contest.find({})
             .sort({ createdAt: -1 });
 
             console.log(contests)
