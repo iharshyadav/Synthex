@@ -95,7 +95,7 @@ export default function ContestPage() {
 
   const handleAcceptRules = (contest: IContest) => {
     if (contest?._id) {
-      console.log(contest._id)
+      // console.log(contest._id)
       joinContestMutation.mutate(contest._id);
     }
   };

@@ -10,18 +10,21 @@ import ContestInfoCards from "./_components/contest/contest-info-cards"
 import ContestTabs from "./_components/contest/contest-tabs"
 import { MOCK_CONTEST } from "./_components/contest/mock-data"
 import NavigationHeader from "@components/NavigationHeader"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import toast from "react-hot-toast"
+import { useUser } from "@clerk/nextjs"
+import { IContest } from "types/contestType"
 
 export default function ContestDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [contest, setContest] = useState<any>(MOCK_CONTEST)
   const [theme, setTheme] = useState<"light" | "dark">("dark")
 
-  // Toggle favorite status
   const handleToggleFavorite = () => {
     setContest({ ...contest, isFavorite: !contest.isFavorite })
   }
 
-  // Toggle registration status
   const handleToggleRegistration = () => {
     setContest({ ...contest, isRegistered: !contest.isRegistered })
   }
@@ -35,6 +38,51 @@ export default function ContestDetailPage({ params }: { params: { id: string } }
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light")
   }
+
+  const joinContestMutation = useMutation({
+    mutationFn: async (contestId: string) => {
+      const response = await axios.post('/api/contest/joinContest', {
+        contestId: contestId,
+        // name : user?.fullName
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      // setIsModalOpen(false);
+      // queryClient.invalidateQueries({ queryKey: ['contests'] });
+      toast.success("Successfully joined contest");
+    },
+    onError: (error:any) => {
+      console.error('Error joining contest:', error);
+      toast.error("Failed to join contest");
+    }
+  });
+
+  const {user} = useUser();
+
+  const { data: contestsData, isLoading } = useQuery<IContest[] | undefined>({
+    queryKey: ['contests'],
+    queryFn: async () => {
+      try {
+        const response = await axios.get('/api/contest', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!response.data) {
+          throw new Error('Failed to fetch contests');
+        }
+
+        // console.log(response.data)
+        
+        return response.data.data;
+      } catch (error) {
+        console.error('Error fetching contests:', error);
+        throw error;
+      }
+    },
+  });
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
@@ -60,13 +108,10 @@ export default function ContestDetailPage({ params }: { params: { id: string } }
           </Button>
         </div>
 
-        {/* Contest Header */}
         <ContestHeader contest={contest} onToggleFavorite={handleToggleFavorite} />
 
-        {/* Contest Info Cards */}
-        <ContestInfoCards contest={contest} onToggleRegistration={handleToggleRegistration} />
+        <ContestInfoCards contestsData={contestsData} contest={contest} onToggleRegistration={handleToggleRegistration} />
 
-        {/* Contest Details Tabs */}
         <ContestTabs contest={contest} />
       </div>
     </div>

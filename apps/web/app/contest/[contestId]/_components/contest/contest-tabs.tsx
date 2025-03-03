@@ -12,18 +12,18 @@ interface ContestTabsProps {
 
 export default function ContestTabs({ contest }: ContestTabsProps) {
   return (
-    <Tabs defaultValue="problems" className="space-y-4">
-      <TabsList className="grid grid-cols-5 w-full">
-        <TabsTrigger value="problems">Problems</TabsTrigger>
+    <Tabs defaultValue="details" className="space-y-4">
+      <TabsList className="grid grid-cols-4 w-full">
+        {/* <TabsTrigger value="problems">Problems</TabsTrigger> */}
         <TabsTrigger value="details">Details</TabsTrigger>
         <TabsTrigger value="participants">Participants</TabsTrigger>
         <TabsTrigger value="materials">Materials</TabsTrigger>
         <TabsTrigger value="updates">Updates</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="problems">
+      {/* <TabsContent value="problems">
         <ProblemsTab problems={contest.problems} />
-      </TabsContent>
+      </TabsContent> */}
 
       <TabsContent value="details">
         <DetailsTab rules={contest.rules} />

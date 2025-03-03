@@ -28,13 +28,13 @@ export default function ParticipantsTab({
             {participants.slice(0, 9).map((participant:any) => (
               <div key={participant.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-muted hover-scale">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={participant.avatar} alt={participant.name} />
-                  <AvatarFallback>{participant.name.charAt(0)}</AvatarFallback>
+                  <AvatarImage src={participant.avatar} alt={participant.username} />
+                  <AvatarFallback>{participant?.username?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-sm font-medium">{participant.name}</div>
+                  <div className="text-sm font-medium">{participant.username}</div>
                   <div className="text-xs text-muted-foreground">
-                    Joined {format(participant.registrationDate, "MMM d, yyyy")}
+                    Joined {format(new Date(participant.registrationDate), "MMM d, yyyy")}
                   </div>
                 </div>
               </div>
@@ -65,12 +65,12 @@ export default function ParticipantsTab({
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={participant.avatar} alt={participant.name} />
-                      <AvatarFallback>{participant.name.charAt(0)}</AvatarFallback>
+                      <AvatarFallback>{participant.name.charAt(0) || '?'}</AvatarFallback>
                     </Avatar>
                     <div>
                       <div className="text-sm font-medium">{participant.name}</div>
                       <div className="text-xs text-muted-foreground">
-                        Joined waitlist on {format(participant.registrationDate, "MMM d, yyyy")}
+                        Joined waitlist on {format(new Date(participant.registrationDate), "MMM d, yyyy")}
                       </div>
                     </div>
                   </div>

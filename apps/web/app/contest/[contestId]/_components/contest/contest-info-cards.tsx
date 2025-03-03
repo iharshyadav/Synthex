@@ -5,13 +5,19 @@ import { format } from "date-fns"
 import { Calendar, Users, Trophy, Award, UserPlus, UserMinus, Rocket, BarChart3 } from "lucide-react"
 import { IContest } from "types/contestType"
 import { cn } from "@components/lib/utils"
+import { useUser } from "@clerk/nextjs"
+import { useParams } from "next/navigation"
 
 interface ContestInfoCardsProps {
   contest: any
   onToggleRegistration: () => void
+  contestsData : IContest[] | undefined
 }
 
-export default function ContestInfoCards({ contest, onToggleRegistration }: ContestInfoCardsProps) {
+export default function ContestInfoCards({ contest, onToggleRegistration , contestsData }: ContestInfoCardsProps) {
+
+  const {user} = useUser();
+  const params = useParams();
   // Calculate registration progress percentage
   const registrationProgress = Math.floor((contest.currentParticipants / contest.participantLimit) * 100)
 
@@ -108,8 +114,33 @@ export default function ContestInfoCards({ contest, onToggleRegistration }: Cont
                 : "bg-gradient-to-r from-primary to-secondary hover:opacity-90",
             )}
             onClick={onToggleRegistration}
+
+      //       {
+      //         user && contest.participants.filter((item) => item.userId == user.id).length > 0 ? 
+      //       <Button 
+      //         className="w-full mt-4 relative group overflow-hidden bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 hover:opacity-90 text-white font-medium py-6"
+      //         onClick={() => router.push(`/contest/${contest._id}`)}
+      //       >
+      //         <span className="relative z-10 flex items-center justify-center">
+      //           Open Challenge
+      //           <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+      //         </span>
+      //       </Button> : 
+      //       <Button 
+      //       className="w-full mt-4 relative group overflow-hidden bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 hover:opacity-90 text-white font-medium py-6"
+      //       onClick={() => handleJoinChallenge(contest)}
+      //     >
+      //       <span className="relative z-10 flex items-center justify-center">
+      //         Join Challenge
+      //         <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+      //       </span>
+      //     </Button>
+      //       }
+      //     </div>
+      //   </motion.div>
+      // ))}
           >
-            {contest.isRegistered ? (
+             {user?.id && (contestsData?.find((item) => item._id === params.contestId)?.participants ?? []).filter((item) => item.userId === user.id).length > 0 ? (
               <>
                 <UserMinus className="h-4 w-4 mr-2" />
                 Withdraw

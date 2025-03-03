@@ -34,7 +34,7 @@ export async function POST(request: Request): Promise<NextResponse> {
             );
         }
 
-        console.log(contest)
+        // console.log(contest)
 
         if (contest.participants.length > 0) {
           const existingParticipation = await Contest.findOne({
@@ -52,7 +52,7 @@ export async function POST(request: Request): Promise<NextResponse> {
           }
         }
 
-        console.log(contestId,"harsh")
+        // console.log(contestId,"harsh")
 
         const participation = await Contest.findByIdAndUpdate(
             contestId,

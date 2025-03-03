@@ -78,6 +78,7 @@ const mockParticipants= Array.from({ length: 68 }).map((_, i) => ({
   username: `User ${i + 1}`,
   score: Math.floor(Math.random() * 1000),
   submissionCount: Math.floor(Math.random() * 20),
+  registrationDate: new Date(Date.now() - Math.random() * 10 * 24 * 60 * 60 * 1000),
 }))
 
 // Mock leaderboard with the new ILeaderboard structure
