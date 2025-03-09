@@ -6,7 +6,10 @@ import { Calendar, Users, Trophy, Award, UserPlus, UserMinus, Rocket, BarChart3 
 import { IContest } from "types/contestType"
 import { cn } from "@components/lib/utils"
 import { useUser } from "@clerk/nextjs"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
+import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
+import Link from "next/link"
 
 interface ContestInfoCardsProps {
   contest: any
@@ -16,9 +19,26 @@ interface ContestInfoCardsProps {
 
 export default function ContestInfoCards({ contest, onToggleRegistration , contestsData }: ContestInfoCardsProps) {
 
+  
   const {user} = useUser();
   const params = useParams();
-  // Calculate registration progress percentage
+
+  const router = useRouter();
+
+  const handleSubmitRegistration = useMutation({
+    mutationKey : ['ToggleRegistration'],
+    mutationFn : async () => {
+      await axios.post(`/api/contest/toggleContestParticipant?contestId=${params.contestId}&name=${user?.fullName}`)
+      .then((data) => {
+           console.log(data)
+      })
+      .catch((error : any) => {
+        console.log(error)
+      })
+    }
+  }
+  )
+
   const registrationProgress = Math.floor((contest.currentParticipants / contest.participantLimit) * 100)
 
   return (
@@ -109,36 +129,11 @@ export default function ContestInfoCards({ contest, onToggleRegistration , conte
           <Button
             className={cn(
               "hover-scale",
-              contest.isRegistered
+              user?.id && (contestsData?.find((item) => item._id === params.contestId)?.participants ?? []).filter((item) => item.userId === user.id).length > 0
                 ? "bg-destructive hover:bg-destructive/90"
                 : "bg-gradient-to-r from-primary to-secondary hover:opacity-90",
             )}
-            onClick={onToggleRegistration}
-
-      //       {
-      //         user && contest.participants.filter((item) => item.userId == user.id).length > 0 ? 
-      //       <Button 
-      //         className="w-full mt-4 relative group overflow-hidden bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 hover:opacity-90 text-white font-medium py-6"
-      //         onClick={() => router.push(`/contest/${contest._id}`)}
-      //       >
-      //         <span className="relative z-10 flex items-center justify-center">
-      //           Open Challenge
-      //           <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-      //         </span>
-      //       </Button> : 
-      //       <Button 
-      //       className="w-full mt-4 relative group overflow-hidden bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 hover:opacity-90 text-white font-medium py-6"
-      //       onClick={() => handleJoinChallenge(contest)}
-      //     >
-      //       <span className="relative z-10 flex items-center justify-center">
-      //         Join Challenge
-      //         <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-      //       </span>
-      //     </Button>
-      //       }
-      //     </div>
-      //   </motion.div>
-      // ))}
+            onClick={() => handleSubmitRegistration.mutate()}
           >
              {user?.id && (contestsData?.find((item) => item._id === params.contestId)?.participants ?? []).filter((item) => item.userId === user.id).length > 0 ? (
               <>
@@ -154,8 +149,8 @@ export default function ContestInfoCards({ contest, onToggleRegistration , conte
           </Button>
         )}
 
-        {contest.status === "active" && (
-          <Button className="hover-scale bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+        {user?.id && (contestsData?.find((item) => item._id === params.contestId)?.participants ?? []).filter((item) => item.userId === user.id).length > 0 && (
+          <Button onClick={() => router.push(`/contest/${params.contestId}/questions`)} className="hover-scale bg-gradient-to-r ml-4 from-primary to-secondary hover:opacity-90">
             <Rocket className="h-4 w-4 mr-2" />
             Enter Contest
           </Button>

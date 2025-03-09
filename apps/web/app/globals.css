@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -136,6 +137,90 @@
   border-radius: 10px;
 }
 
+.editor-wrapper {
+  @apply relative w-full;
+}
+
+.editor-toolbar {
+  @apply absolute top-0 right-0 z-10 flex items-center gap-2 p-2 bg-[#2C2C2C] rounded-bl border border-[#3E3E3E];
+}
+
+.toolbar-button {
+  @apply p-1.5 rounded transition-colors text-[#D4D4D4] hover:bg-[#3E3E3E] focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.language-select {
+  @apply bg-[#2C2C2C] border border-[#3E3E3E] text-[#D4D4D4] rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+/* Monaco Editor Overrides */
+.monaco-editor {
+  @apply font-['Fira_Code',monospace] !important;
+}
+
+.monaco-editor .margin {
+  @apply bg-[#1E1E1E] !important;
+}
+
+.monaco-editor .line-numbers {
+  @apply text-[#858585] !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[#2C2C2C];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[#3E3E3E] rounded-full hover:bg-[#4E4E4E] transition-colors;
+}
+
+/* Split Pane Styles */
+.split {
+  @apply flex;
+}
+
+.gutter {
+  @apply bg-[#2C2C2C] hover:bg-[#3E3E3E] transition-colors;
+}
+
+.gutter.gutter-horizontal {
+  @apply cursor-col-resize;
+}
+
+.gutter.gutter-vertical {
+  @apply cursor-row-resize;
+}
+
+/* Prose Overrides */
+.prose {
+  @apply max-w-none;
+}
+
+.prose code {
+  @apply bg-[#2C2C2C] px-1.5 py-0.5 rounded text-[#D4D4D4];
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  @apply text-[#D4D4D4];
+}
+
+.prose p {
+  @apply text-[#D4D4D4];
+}
+
+.prose strong {
+  @apply text-[#D4D4D4];
+}
 
 
 @layer base {

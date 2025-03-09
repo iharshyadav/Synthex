@@ -5,6 +5,7 @@ import { Send, Bot, User, X, MessageCircle } from "lucide-react";
 import { cn } from "@components/lib/utils";
 import { chatBotResponse } from "./AIchatbot";
 import { useUser } from "@clerk/nextjs";
+import { useParams } from "next/navigation";
 
 interface Message {
   id: string;
@@ -20,7 +21,10 @@ export default function Chatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+  const params = useParams();
+  // console.log(params)
 
+ 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -57,6 +61,11 @@ export default function Chatbot() {
       setIsLoading(false);
     }
   };
+
+  if (params.contestId !== undefined) {
+    return null;
+  }
+
 
   return (
     <>
