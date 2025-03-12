@@ -23,12 +23,14 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import NavigationHeader from '@components/NavigationHeader';
+import { submitContestCode } from './store/usecontestContext';
+import { useMutation } from 'convex/react';
+import { api } from '../../../../../convex/_generated/api';
 
 function App() {
-  const [code, setCode] = useState<string>(`function twoSum(nums, target) {
-  // Write your solution here
+  const [code, setCode] = useState<string>("");
+    
   
-}`);
   const [output, setOutput] = useState<string>('');
   const [language, setLanguage] = useState<string>('javascript');
   const [theme, setTheme] = useState<'vs-dark' | 'light'>('vs-dark');
@@ -37,6 +39,7 @@ function App() {
   const [currentTest, setCurrentTest] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'testcases' | 'output'>('testcases');
   const editorRef = useRef<any>(null);
+   const saveContestProblemResponse = useMutation(api.contestResult.saveContestProblemResponse);
 
   const testCases = [
     {
@@ -98,6 +101,119 @@ function App() {
     setShowOutput(true);
     setActiveTab('output');
     setOutput('');
+
+    if (!code.trim()) {
+      setOutput('Error: Code cannot be empty. Please write some code before running.');
+      return;
+    }
+
+    try {
+      const languageIdMap: Record<string, number> = {
+        javascript: 63,
+        python: 71,
+        java: 62,
+        cpp: 54
+      };
+      
+      const languageId = languageIdMap[language];
+      if (!languageId) {
+        setOutput(`Error: Unsupported language "${language}".`);
+        return;
+      }
+
+      const encodedCode = btoa(code);
+      const cases = [
+        {
+            "input": "4 5 6 7\n11",
+            "expected_output": "Indices: 1, 2\n",
+            "hidden": false
+        },
+        {
+            "input": "1 2 3 4 5\n9",
+            "expected_output": "Indices: 3, 4\n",
+            "hidden": false
+        },
+        {
+            "input": "3 2 4\n6",
+            "expected_output": "Indices: 1, 2\n",
+            "hidden": false
+        },
+        {
+            "input": "2 7 11 15\n9",
+            "expected_output": "Indices: 0, 1\n",
+            "hidden": false
+        },
+        {
+            "input": "1 3 4 2\n6",
+            "expected_output": "Indices: 1, 2\n",
+            "hidden": false
+        },
+        {
+            "input": "-3 4 3 90\n0",
+            "expected_output": "Indices: 0, 2\n",
+            "hidden": true
+        },
+        {
+            "input": "0 4 3 0\n0",
+            "expected_output": "Indices: 0, 3\n",
+            "hidden": true
+        },
+        {
+            "input": "1000000 999999 1 2\n1000001",
+            "expected_output": "Indices: 0, 2\n",
+            "hidden": true
+        },
+        {
+            "input": "1 2 3 4 5 6 7 8 9 10\n19",
+            "expected_output": "Indices: 8, 9\n",
+            "hidden": true
+        }
+      ]    
+      const res = await submitContestCode(encodedCode, languageId, cases, "67c2d5d7ffc93856938e13f4", "1");
+      console.log(res,"hatsh");
+      
+      // if (res && res.output) {
+      //   setOutput(res.output);
+      // } else if (res && res.error) {
+      //   setOutput(`Error: ${res.error}`);
+      // }
+
+      const contestId = "67c2d5d7ffc93856938e13f4";
+      const problemId = "1";
+
+      if (contestId && problemId) {
+        try {
+            await saveContestProblemResponse({
+                contestId,
+                problemId,
+                code,
+                token: [res.toString()],
+                status: 'PROCESSING',
+                language: String(languageId),
+                executionTime : 123,
+                memory : 128000
+            });
+        } catch (dbError) {
+            console.error('Error saving submission to database:', dbError);
+        }
+    }
+    
+
+    } catch (error) {
+      console.error(error);
+      setOutput(`Error submitting code: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    //     {
+    //         "input": "1000 2000 3000 4000 5000\n7000",
+    //         "expected_output": "Indices: 2, 4\n",
+    //         "hidden": true
+    //     },
+    //     {
+    //         "input": "-10 -20 -30 -40 -50\n-70",
+    //         "expected_output": "Indices: 2, 4\n",
+    //         "hidden": true
+    //     }
+    // ]
     
     for (let i = 0; i < testCases.length; i++) {
       setCurrentTest(i);
@@ -141,7 +257,7 @@ function App() {
           </button>
         </div>
         <div className="flex items-center space-x-3">
-          <button onClick={runCode} className="px-4 py-1.5 bg-emerald-600 text-white rounded text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center">
+          <button onClick={runCode} className="px-4 py-1.5 bg-emerald-600 text-white rounded text-sm           font-medium hover:bg-emerald-700 transition-colors flex items-center">
             <Play className="w-4 h-4 mr-2" />
             Run
           </button>

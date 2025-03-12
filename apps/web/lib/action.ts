@@ -76,7 +76,7 @@ export const runLiveCode = async (language: string, code: string) => {
 
     const output = data.run.output;
 
-    console.log(output);
+    // console.log(output);
 
     //   set({
     //     output: output.trim(),
@@ -185,9 +185,8 @@ export const generateReview = async (code: string) => {
     `
     });
 
-    console.log("first")
     const result = await model.generateContent(code);
-    console.log(result.response.text())
+    // console.log(result.response.text())
     return result.response.text();
   } catch (error) {
     console.error("Error generating review:", error);

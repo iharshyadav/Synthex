@@ -61,4 +61,20 @@ export default defineSchema({
   }).index("by_user_id", ["userId"])
     .index("by_order_id", ["orderId"])
     .index("by_payment_id", ["paymentId"]),
+
+    contestProblemResponses: defineTable({
+      userId: v.string(),
+      contestId: v.string(),
+      problemId: v.string(),
+      code: v.string(),
+      token: v.array(v.string()),
+      status: v.string(),
+      language: v.string(),
+      submittedAt: v.number(),
+      executionTime: v.optional(v.number()),
+      memory: v.optional(v.number()),
+    }).index("by_user_id", ["userId"])
+      .index("by_contest_id", ["contestId"])
+      .index("by_problem_id", ["problemId"])
+      .index("by_token", ["token"]),
 });
