@@ -74,7 +74,7 @@ export default function ContestDetailPage({ params }: { params: { id: string } }
           throw new Error('Failed to fetch contests');
         }
 
-        // console.log(response.data)
+        console.log(response.data)
         
         return response.data.data;
       } catch (error) {
@@ -83,6 +83,14 @@ export default function ContestDetailPage({ params }: { params: { id: string } }
       }
     },
   });
+
+  useEffect(() => {
+    console.log(contestsData)
+
+  },[contestsData])
+
+
+  if(contestsData == undefined) return null;
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
@@ -108,11 +116,11 @@ export default function ContestDetailPage({ params }: { params: { id: string } }
           </Button>
         </div>
 
-        <ContestHeader contest={contest} onToggleFavorite={handleToggleFavorite} />
+        <ContestHeader contest={contestsData} onToggleFavorite={handleToggleFavorite} />
 
-        <ContestInfoCards contestsData={contestsData} contest={contest} onToggleRegistration={handleToggleRegistration} />
+        {/* <ContestInfoCards contestsData={contestsData} onToggleRegistration={handleToggleRegistration} /> */}
 
-        <ContestTabs contest={contest} />
+        <ContestTabs contest={contestsData} />
       </div>
     </div>
   )

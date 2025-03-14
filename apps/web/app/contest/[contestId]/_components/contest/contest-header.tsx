@@ -54,24 +54,24 @@ export default function ContestHeader({ contest, onToggleFavorite }: ContestHead
           </div>
 
           <div className="flex flex-wrap gap-2 mt-6">
-            {contest.categories.map((category:any) => (
+            {/* {contest.categories.map((category:any) => (
               <Badge key={category} variant="secondary" className="hover-scale">
                 <CategoryIcon category={category} />
                 <span className="ml-1">{category}</span>
               </Badge>
-            ))}
+            ))} */}
             <Badge variant="outline" className="hover-scale">
-              {contest.type.charAt(0).toUpperCase() + contest.type.slice(1)}
+              {/* {contest.type.charAt(0).toUpperCase() + contest.type} */}
             </Badge>
           </div>
 
           <div className="mt-6 flex items-center">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={contest.organizer.avatar} alt={contest.organizer.name} />
-              <AvatarFallback>{contest.organizer.name.charAt(0)}</AvatarFallback>
+              {/* <AvatarImage src={contest.organizer.avatar} alt={contest.organizer.name} /> */}
+              <AvatarFallback>{contest.createdBy}</AvatarFallback>
             </Avatar>
             <div className="ml-2">
-              <div className="text-sm font-medium">{contest.organizer.name}</div>
+              <div className="text-sm font-medium">{contest.createdBy}</div>
               <div className="text-xs text-muted-foreground">Organizer</div>
             </div>
           </div>

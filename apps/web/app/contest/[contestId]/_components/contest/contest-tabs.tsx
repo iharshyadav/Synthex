@@ -2,22 +2,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/components
 import ProblemsTab from "./tabs/problems-tab"
 import DetailsTab from "./tabs/details-tab"
 import ParticipantsTab from "./tabs/participants-tab"
-import MaterialsTab from "./tabs/materials-tab"
 import UpdatesTab from "./tabs/updates-tab"
 import { IContest } from "types/contestType"
+import ProblemsManagementTab from "./tabs/ProblemsManagement-Tab"
 
 interface ContestTabsProps {
   contest: any
 }
 
 export default function ContestTabs({ contest }: ContestTabsProps) {
+  // const { _id : contestId, problems, onAddProblem, onUpdateProblem, onDeleteProblem, onReorderProblems } = contest;
+  // console.log(contest.participants)
   return (
     <Tabs defaultValue="details" className="space-y-4">
       <TabsList className="grid grid-cols-4 w-full">
         {/* <TabsTrigger value="problems">Problems</TabsTrigger> */}
         <TabsTrigger value="details">Details</TabsTrigger>
         <TabsTrigger value="participants">Participants</TabsTrigger>
-        <TabsTrigger value="materials">Materials</TabsTrigger>
+        <TabsTrigger value="problems">Problems</TabsTrigger>
         <TabsTrigger value="updates">Updates</TabsTrigger>
       </TabsList>
 
@@ -26,7 +28,7 @@ export default function ContestTabs({ contest }: ContestTabsProps) {
       </TabsContent> */}
 
       <TabsContent value="details">
-        <DetailsTab rules={contest.rules} />
+        {/* <DetailsTab rules={contest.rules} /> */}
       </TabsContent>
 
       <TabsContent value="participants">
@@ -38,8 +40,10 @@ export default function ContestTabs({ contest }: ContestTabsProps) {
         />
       </TabsContent>
 
-      <TabsContent value="materials">
-        <MaterialsTab materials={contest.materials} />
+      <TabsContent value="problems">
+        <ProblemsManagementTab
+          problems={contest.problems}
+        />
       </TabsContent>
 
       <TabsContent value="updates">

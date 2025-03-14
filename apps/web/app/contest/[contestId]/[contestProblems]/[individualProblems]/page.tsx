@@ -171,12 +171,6 @@ function App() {
       ]    
       const res = await submitContestCode(encodedCode, languageId, cases, "67c2d5d7ffc93856938e13f4", "1");
       console.log(res,"hatsh");
-      
-      // if (res && res.output) {
-      //   setOutput(res.output);
-      // } else if (res && res.error) {
-      //   setOutput(`Error: ${res.error}`);
-      // }
 
       const contestId = "67c2d5d7ffc93856938e13f4";
       const problemId = "1";
@@ -203,17 +197,6 @@ function App() {
       console.error(error);
       setOutput(`Error submitting code: ${error instanceof Error ? error.message : String(error)}`);
     }
-    //     {
-    //         "input": "1000 2000 3000 4000 5000\n7000",
-    //         "expected_output": "Indices: 2, 4\n",
-    //         "hidden": true
-    //     },
-    //     {
-    //         "input": "-10 -20 -30 -40 -50\n-70",
-    //         "expected_output": "Indices: 2, 4\n",
-    //         "hidden": true
-    //     }
-    // ]
     
     for (let i = 0; i < testCases.length; i++) {
       setCurrentTest(i);

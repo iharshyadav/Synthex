@@ -25,7 +25,7 @@ export default function ParticipantsTab({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {participants.slice(0, 9).map((participant:any) => (
+            {participants.map((participant:any) => (
               <div key={participant.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-muted hover-scale">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={participant.avatar} alt={participant.username} />
