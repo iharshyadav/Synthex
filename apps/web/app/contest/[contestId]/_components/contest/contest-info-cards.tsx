@@ -12,12 +12,12 @@ import axios from "axios"
 import Link from "next/link"
 
 interface ContestInfoCardsProps {
-  contest: any
-  onToggleRegistration: () => void
-  contestsData : IContest[] | undefined
+  // contest: any
+  // onToggleRegistration: () => void
+  contestsData : IContest | undefined
 }
 
-export default function ContestInfoCards({ contest, onToggleRegistration , contestsData }: ContestInfoCardsProps) {
+export default function ContestInfoCards({ contestsData }: ContestInfoCardsProps) {
 
   
   const {user} = useUser();
@@ -39,7 +39,7 @@ export default function ContestInfoCards({ contest, onToggleRegistration , conte
   }
   )
 
-  const registrationProgress = Math.floor((contest.currentParticipants / contest.participantLimit) * 100)
+  const registrationProgress = Math.floor(((contestsData?.participants || []).length / 100) * 100)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -54,16 +54,17 @@ export default function ContestInfoCards({ contest, onToggleRegistration , conte
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Start:</span>
-              <span className="text-sm font-medium">{format(contest.startTime, "PPP p")}</span>
+              <span className="text-sm font-medium">{contestsData?.startTime ? format(contestsData.startTime, "PPP p") : "TBD"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">End:</span>
-              <span className="text-sm font-medium">{format(contest.endTime, "PPP p")}</span>
+              <span className="text-sm font-medium">{contestsData?.endTime ? format(contestsData.endTime, "PPP p") : "TBD"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Duration:</span>
               <span className="text-sm font-medium">
-                {Math.round((contest.endTime.getTime() - contest.startTime.getTime()) / (1000 * 60 * 60))} hours
+                {contestsData?.startTime && contestsData?.endTime ? 
+                  Math.round((new Date(contestsData.endTime).getTime() - new Date(contestsData.startTime).getTime()) / (1000 * 60 * 60)) : "?"} hours
               </span>
             </div>
           </div>
@@ -82,17 +83,17 @@ export default function ContestInfoCards({ contest, onToggleRegistration , conte
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Registered:</span>
               <span className="text-sm font-medium">
-                {contest.currentParticipants} / {contest.participantLimit}
+                {contestsData?.participants?.length || 0} / {100}
               </span>
             </div>
             <Progress value={registrationProgress} className="h-2 bg-muted dark:bg-muted/50" />
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Waitlist:</span>
-              <span className="text-sm font-medium">{contest.waitlist.length} people</span>
+              {/* <span className="text-sm font-medium">{contestsData?.waitlist?.length || 0} people</span> */}
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">Entry Fee:</span>
-              <span className="text-sm font-medium">{contest.entryFee > 0 ? `$${contest.entryFee}` : "Free"}</span>
+              {/* <span className="text-sm font-medium">{(contestsData?.entryFee || 0) > 0 ? `$${contestsData?.entryFee}` : "Free"}</span> */}
             </div>
           </div>
         </CardContent>
@@ -107,7 +108,7 @@ export default function ContestInfoCards({ contest, onToggleRegistration , conte
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {contest.prizes.map((prize:any) => (
+            {(contestsData?.prizes || []).map((prize:any) => (
               <div key={prize.position} className="flex justify-between">
                 <span className="text-sm text-muted-foreground flex items-center">
                   {prize.position === 1 && <Award className="h-3 w-3 mr-1 text-yellow-500" />}
@@ -125,17 +126,17 @@ export default function ContestInfoCards({ contest, onToggleRegistration , conte
       </Card>
 
       <div className="md:col-span-3 flex justify-end">
-        {contest.status === "upcoming" && (
+        {new Date() < (contestsData?.startTime || new Date()) && (
           <Button
             className={cn(
               "hover-scale",
-              user?.id && (contestsData?.find((item) => item._id === params.contestId)?.participants ?? []).filter((item) => item.userId === user.id).length > 0
+              user?.id && (contestsData?.participants || []).filter((item) => item.userId === user.id).length > 0
                 ? "bg-destructive hover:bg-destructive/90"
                 : "bg-gradient-to-r from-primary to-secondary hover:opacity-90",
             )}
             onClick={() => handleSubmitRegistration.mutate()}
           >
-             {user?.id && (contestsData?.find((item) => item._id === params.contestId)?.participants ?? []).filter((item) => item.userId === user.id).length > 0 ? (
+             {user?.id && (contestsData?.participants || []).filter((item) => item.userId === user.id).length > 0 ? (
               <>
                 <UserMinus className="h-4 w-4 mr-2" />
                 Withdraw
@@ -149,14 +150,14 @@ export default function ContestInfoCards({ contest, onToggleRegistration , conte
           </Button>
         )}
 
-        {user?.id && (contestsData?.find((item) => item._id === params.contestId)?.participants ?? []).filter((item) => item.userId === user.id).length > 0 && (
+        {user?.id && (contestsData?.participants ?? []).filter((item) => item.userId === user.id).length > 0 && (
           <Button onClick={() => router.push(`/contest/${params.contestId}/questions`)} className="hover-scale bg-gradient-to-r ml-4 from-primary to-secondary hover:opacity-90">
             <Rocket className="h-4 w-4 mr-2" />
             Enter Contest
           </Button>
         )}
 
-        {contest.status === "completed" && (
+        {contestsData?.endTime && new Date() > contestsData.endTime && (
           <Button variant="outline" className="hover-scale">
             <BarChart3 className="h-4 w-4 mr-2" />
             View Results

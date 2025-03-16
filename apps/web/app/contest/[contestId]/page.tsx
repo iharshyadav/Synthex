@@ -153,9 +153,9 @@ export default function ContestDetailPage() {
 
         <ContestHeader creatorData={creatorData} contest={contest} />
 
-        {/* <ContestInfoCards contestsData={contestsData} onToggleRegistration={handleToggleRegistration} /> */}
+        <ContestInfoCards contestsData={contest} />
 
-        <ContestTabs contest={contestsData} />
+        <ContestTabs contest={contest} />
       </div>
     </div>
   );

@@ -57,15 +57,21 @@ export default function ContestHeader({ contest , creatorData }: ContestHeaderPr
           </div>
 
           <div className="flex flex-wrap gap-2 mt-6">
-            {/* {contest.categories.map((category:any) => (
-              <Badge key={category} variant="secondary" className="hover-scale">
-                <CategoryIcon category={category} />
-                <span className="ml-1">{category}</span>
-              </Badge>
-            ))} */}
-            <Badge variant="outline" className="hover-scale">
-              {/* {contest.type.charAt(0).toUpperCase() + contest.type} */}
+            <Badge key="programming" variant="secondary" className="hover-scale">
+              <CategoryIcon category="programming" />
+              <span className="ml-1">Programming</span>
             </Badge>
+            <Badge key="design" variant="secondary" className="hover-scale">
+              <CategoryIcon category="design" />
+              <span className="ml-1">Design</span>
+            </Badge>
+            <Badge key="algorithm" variant="secondary" className="hover-scale">
+              <CategoryIcon category="algorithm" />
+              <span className="ml-1">Algorithm</span>
+            </Badge>
+            {/* <Badge variant="outline" className="hover-scale">
+              {contest.type.charAt(0).toUpperCase() + contest.type}
+            </Badge> */}
           </div>
 
           <div className="mt-6 flex items-center">
