@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { Label } from "@components/components/ui/label"
 import { handleSubmit } from "app/contest/[contestId]/lib/createProblem"
 import { Switch } from "@components/components/ui/switch"
+import { useParams } from "next/navigation"
 
 interface Problem {
   id: string
@@ -35,6 +36,8 @@ export default function ProblemsManagementTab({
   const [editingProblem, setEditingProblem] = useState<Problem | null>(null)
   const [imagesState, setImagesState] = useState<(string | File)[]>([])
   const [fetchedImageUrls, setFetchedImageUrls] = useState<string[]>([])
+  const params = useParams()
+  const contestId = params.contestId as string
   
   const handleAddProblem = (formData: FormData) => {
     const newProblem = {
@@ -114,13 +117,18 @@ export default function ProblemsManagementTab({
         imagesState.length > 0 && imagesState.forEach((image, index) => {
           formData.append(`images[${index}]`, image);
           });
-          // testCases.length > 0 && testCases.forEach((cases,index) => {
-          //   formData.append(`cases[${index}].input`, cases.input);
-          //   formData.append(`cases[${index}].output`, cases.output);
-          //   formData.append(`cases[${index}].public`, String(cases.public));
-          // })
           testCases.length > 0 && formData.append(`testcases`, JSON.stringify(testCases))
-        await handleSubmit(formData);
+          await handleSubmit(formData,contestId);
+          setTestCases([{ input: '', output: '', public: false }]);
+          setImagesState([]);
+          e.currentTarget.reset();
+          // onSubmit(formData);
+
+          if (problem) {
+            setEditingProblem(null);
+          } else {
+            setIsAddDialogOpen(false);
+          }
       }}
        className="space-y-4 max-h-[70vh] overflow-y-auto p-2">
         <div className="space-y-2">
@@ -190,6 +198,7 @@ export default function ProblemsManagementTab({
             className="hidden" 
             onChange={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               if (e.target.files && e.target.files.length > 0) {
               const newFiles = Array.from(e.target.files);
               const updatedFiles = [...(problem?.images || []), ...newFiles];
@@ -340,7 +349,7 @@ export default function ProblemsManagementTab({
               </div>
             ) : (
               problems.map((problem, index) => (
-                <Card key={problem.id}>
+                <Card key={index}>
                   <CardHeader className="py-3">
                     <div className="flex justify-between">
                       <div>

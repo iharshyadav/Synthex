@@ -209,6 +209,9 @@ import { Button } from "@components/components/ui/button"
 import { Badge } from "@components/components/ui/badge"
 import { Skeleton } from "@components/components/ui/skeleton"
 import { useParams } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
+import { IContest } from "types/contestType"
+import axios from "axios"
 
 interface ContestProblemProps {
   params: {
@@ -249,16 +252,11 @@ const difficultyIcon: Record<Difficulty, React.ReactElement> = {
 }
 
 const ContestProblemsPage: FC<ContestProblemProps> = ({}) => {
-  const params = useParams();
   const [problems, setProblems] = useState<Problem[]>([])
   const [searchQuery, setSearchQuery] = useState("")
-  const [contest, setContest] = useState({
-    title: "",
-    timeLeft: "",
-    totalPoints: 0,
-  })
+  const [contest, setContest] = useState<IContest>();
+  const params = useParams();
   const [loading, setLoading] = useState(true)
-  // const [isDarkMode, setIsDarkMode] = useState(false)
   const [activeFilters, setActiveFilters] = useState<{
     difficulty: Difficulty | null
     status: "all" | "solved" | "attempted" | "unsolved"
@@ -266,6 +264,7 @@ const ContestProblemsPage: FC<ContestProblemProps> = ({}) => {
     difficulty: null,
     status: "all",
   })
+  console.log(params,"manish")
   const [timeRemaining, setTimeRemaining] = useState<{ hours: number; minutes: number; seconds: number }>({
     hours: 0,
     minutes: 0,
@@ -273,15 +272,51 @@ const ContestProblemsPage: FC<ContestProblemProps> = ({}) => {
   })
   const [showFilters, setShowFilters] = useState(false)
 
-  // Fetch contest data
+  const { data: contestsData, isLoading } = useQuery<IContest[] | undefined>({
+    queryKey: ["contests"],
+    queryFn: async () => {
+      try {
+        const response = await axios.get("/api/contest", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.data) {
+          throw new Error("Failed to fetch contests");
+        }
+
+        console.log(response.data);
+
+        return response.data.data;
+      } catch (error) {
+        console.error("Error fetching contests:", error);
+        throw error;
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
   useEffect(() => {
-    // Simulate API fetch for contest and problems data
+    if (contestsData) {
+      const unique = contestsData.find(
+        (item: IContest) => item._id === params.contestId
+      );
+      if (unique) {
+        setContest(unique);
+      }
+    }
+  }, [contestsData, params.contestId]);
+  
+ 
+
+  useEffect(() => {
     setLoading(true)
 
     setTimeout(() => {
       setContest({
         title: "Weekly Contest 123",
-        timeLeft: "01:45:30",
+        startTime: Date.now(),
         totalPoints: 2100,
       })
 
@@ -337,7 +372,6 @@ const ContestProblemsPage: FC<ContestProblemProps> = ({}) => {
           points: 900,
         },
       ]
-
       setProblems(mockProblems)
       setLoading(false)
     }, 1000)
@@ -345,10 +379,10 @@ const ContestProblemsPage: FC<ContestProblemProps> = ({}) => {
 
   // Update timer
   useEffect(() => {
-    if (!contest.timeLeft || loading) return
+    if (!contest?.timeLeft || loading) return
 
     // Parse the initial time
-    const [hoursStr, minutesStr, secondsStr] = contest.timeLeft.split(":")
+    const [hoursStr, minutesStr, secondsStr] = contest?.timeLeft.split(":")
     const hours = parseInt(hoursStr || "0", 10) || 0
     const minutes = parseInt(minutesStr || "0", 10) || 0
     const seconds = parseInt(secondsStr || "0", 10) || 0
@@ -381,7 +415,7 @@ const ContestProblemsPage: FC<ContestProblemProps> = ({}) => {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [contest.timeLeft, loading])
+  }, [contest?.timeLeft, loading])
 
   // Format time remaining
   const formattedTimeRemaining = useMemo(() => {
@@ -425,6 +459,10 @@ const ContestProblemsPage: FC<ContestProblemProps> = ({}) => {
     setSearchQuery("")
   }
 
+  if (contestsData == undefined) {
+    return null;
+  } 
+
   // Loading skeleton
   const ProblemSkeleton = () => (
     <div className="animate-pulse">
@@ -467,7 +505,7 @@ const ContestProblemsPage: FC<ContestProblemProps> = ({}) => {
         {/* Top Navigation */}
         <div className="flex justify-between items-center">
           <Link
-            href="/contests"
+            href="/contest"
             className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <ArrowLeft size={16} className="mr-1" />

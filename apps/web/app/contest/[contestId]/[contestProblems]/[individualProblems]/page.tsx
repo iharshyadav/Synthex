@@ -240,7 +240,7 @@ function App() {
           </button>
         </div>
         <div className="flex items-center space-x-3">
-          <button onClick={runCode} className="px-4 py-1.5 bg-emerald-600 text-white rounded text-sm           font-medium hover:bg-emerald-700 transition-colors flex items-center">
+          <button onClick={runCode} className="px-4 py-1.5 bg-emerald-600 text-white rounded text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center">
             <Play className="w-4 h-4 mr-2" />
             Run
           </button>

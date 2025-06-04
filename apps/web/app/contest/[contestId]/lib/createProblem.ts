@@ -2,11 +2,12 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { nanoid } from "nanoid";
-
-export async function handleSubmit(formData: FormData) {
+import mongoose from "mongoose";
+import Contest from "lib/contests/models/contestSchema";
+export async function handleSubmit(formData: FormData , contestId : string) {
     try {
 
-        console.log(formData)
+        // console.log(formData)
 
         const client = new S3Client({
             region: process.env.AWS_REGION,
@@ -57,9 +58,59 @@ export async function handleSubmit(formData: FormData) {
         
         const uploadedUrls = await Promise.all(filePromises);
         console.log(uploadedUrls.filter(Boolean))
-        return uploadedUrls.filter(Boolean) as string[];
+        const title = formData.get('title') as string;
+        const description = formData.get('description') as string;
+        const difficulty = formData.get('difficulty') as "Easy" | "Medium" | "Hard";
+        const points = parseInt(formData.get('points') as string) || 0;
+        const timeLimit = parseInt(formData.get('timeLimit') as string) || 2;
+        const memoryLimit = parseInt(formData.get('memoryLimit') as string) || 256;
+        // const contestId = formData.get('contestId') as string;
+
+        const testCasesString = formData.get('testcases') as string || formData.get('testCases') as string;
+        let testCases = [];
+        try {
+          if (testCasesString) {
+            testCases = JSON.parse(testCasesString);
+            testCases = testCases.map((tc:any) => ({
+              input: tc.input || '',
+              output: tc.output || '',
+              public: tc.public !== undefined ? tc.public : false
+            }));
+          }
+        } catch (error) {
+          console.error('Error parsing test cases:', error);
+          testCases = [];
+        }
+
+        const newProblem = {
+          problemId: new mongoose.Types.ObjectId(),
+          title,
+          description,
+          testCases,
+          image: uploadedUrls.filter(Boolean) as string[],
+          difficulty,
+          points,
+          timeLimit,
+          memoryLimit
+        };
+
+        console.log(newProblem)
+
+        await Contest.findByIdAndUpdate(
+          contestId,
+          { $push: { problems: newProblem } },
+          { new: true }
+        );
+        return {
+          status : 200,
+          images : uploadedUrls.filter(Boolean) as string[]
+        };
         
     } catch (err) {
         console.error('Error uploading file:', err);
+        return {
+          status : 500,
+          images : 'Error uploading file:', err
+        };
     }
 }

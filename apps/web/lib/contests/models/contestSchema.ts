@@ -16,6 +16,10 @@ interface IProblem {
     points: number;
     timeLimit: number;
     memoryLimit: number;
+    tags?: string[];
+    acceptance?: number;
+    attempted?: boolean;
+    solved?: boolean;
 }
 
 interface IParticipant {
@@ -62,6 +66,10 @@ const problemSchema = new mongoose.Schema<IProblem>({
     points: { type: Number, required: true },
     timeLimit: { type: Number, default: 2 },
     memoryLimit: { type: Number, default: 256 },
+    tags: [{ type: String }],
+    acceptance: { type: Number, default: 0 },
+    attempted: { type: Boolean, default: false },
+    solved: { type: Boolean, default: false },
 });
 
 const participantSchema = new mongoose.Schema<IParticipant>({
